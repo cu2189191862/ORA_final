@@ -1,0 +1,4 @@
+*.lp
+*.sol
+./determin/__pycache__/*
+
