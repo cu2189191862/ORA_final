@@ -1,11 +1,6 @@
 import gurobipy as gp
 from gurobipy import GRB
 
-'''
-TODO
-檢查一直沒有PM CM是不是錯的
-
-'''
 class Model:
     def __init__(self):
         self.__def_model()
