@@ -18,7 +18,7 @@ class Model:
 
     def __def_sets(self):
         # hyper
-        self.T_len = 10
+        self.T_len = 100
         self.S_len = 6
 
         # sets
@@ -29,6 +29,10 @@ class Model:
         demand_mu = 4
         demand_sigma= 1
 
+        good_lb = 0.8
+        good_ub = 1
+        good_mid = 0.9
+
         self.C_S = 5
         self.C_H = 3
         self.C_CM = 0 # 10
@@ -36,17 +40,20 @@ class Model:
         self.T_PM = 2 # 2
         self.T_CM = 4 # 3
         self.H_max = 40
-        self.H_I = 30
+        self.H_I = 0
         self.B_I = 0
         self.S_I = 4
         self.R = 2
         self.M = 10000000
         self.m = 0.0001
         self.W_P = [0.18126924692201818, 0.3296799539643607, 0.4511883639059736, 0.5506710358827784, 0.6321205588285577, 0]
-        self.W = np.random.uniform(low=0.0, high=1.0, size=self.T_len).tolist()
-        self.D = np.random.normal(loc=demand_mu, scale=demand_sigma, size=(self.T_len)).tolist()
-        # print(self.W)
-        # print(self.D)
+        # self.W = np.random.uniform(low=0.0, high=1.0, size=self.T_len).tolist()
+        # self.D = np.random.normal(loc=demand_mu, scale=demand_sigma, size=(self.T_len)).tolist()
+        # self.A = np.random.triangular(good_lb, good_mid, good_ub, size=(self.T_len)).tolist()
+        self.W = [0.01] * self.T_len
+        self.D = [6] * self.T_len
+        self.A = [0.8] * self.T_len
+
 
 
 
@@ -155,7 +162,7 @@ class Model:
         # c11: 供給與訂單需求
             if t != 0:
                 self.model.addConstr(
-                    self.h[t] == self.x[t] + self.h[t-1] + self.b[t] - self.D[t] - self.b[t-1], name="c11"
+                    self.h[t] == self.A[t] * self.x[t] + self.h[t-1] + self.b[t] - self.D[t] - self.b[t-1], name="c11"
                 )
         # c12: 存貨上限
             self.model.addConstr(self.h[t] <= self.H_max, name="c12")
@@ -181,6 +188,7 @@ class Model:
         self.__get_sol()
 
     def __get_sol(self):
+        self.obj_value = self.model.getObjective().getValue()
         self.x_sol = self.model.getAttr('x', self.x)
         self.z_PM_sol = self.model.getAttr('x', self.z_PM)
         self.z_CM_sol = self.model.getAttr('x', self.z_CM)
@@ -195,7 +203,9 @@ class Model:
         D = [round(d, 3) for d in self.D]
         W = [round(w, 3) for w in self.W]
         W_P = [round(w_p, 3) for w_p in self.W_P]
+        A = [round(a, 3) for a in self.A]
         print("Params")
+        print("\tA: {}".format(A))
         print("\tD: {}".format(D))
         print("\tW: {}".format(W))
         print("\tW_P: {}".format(W_P))
@@ -216,14 +226,17 @@ class Model:
         D = [round(d, 3) for d in self.D]
         W = [round(w, 3) for w in self.W]
         W_P = [round(w_p, 3) for w_p in self.W_P]
+        A = [round(a, 3) for a in self.A]
 
         with open(output_path, 'a') as f:
             f.write("Params\n")
+            f.write("\tA: {}\n".format(A))
             f.write("\tD: {}\n".format(D))
             f.write("\tW: {}\n".format(W))
             f.write("\tW_P: {}\n".format(W_P))
 
             f.write("Solution\n")
+            f.write("\tObj: {}\n".format(round(self.obj_value, 3)))
             f.write("\tx: {}\n".format([round(self.x_sol[t], 3) for t in self.T]))
             f.write("\tz_PM: {}\n".format([int(self.z_PM_sol[t]) for t in self.T]))
             f.write("\tz_CM: {}\n".format([int(self.z_CM_sol[t]) for t in self.T]))

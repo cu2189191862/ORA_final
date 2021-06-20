@@ -3,7 +3,7 @@ from datetime import datetime
 from model import Model
 
 output_path = "./solution.txt"
-replications = 20
+replications = 1
 
 
 with open(output_path, 'a') as f:

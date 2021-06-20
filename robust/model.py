@@ -28,20 +28,20 @@ class Model:
         self.S = range(self.S_len)
 
     def __def_parameters(self):
-        self.C_S = 100
+        self.C_S = 5
         self.C_H = 3
-        self.C_CM = 10 #10
-        self.C_PM = 2 #2
+        self.C_CM = 0 #10
+        self.C_PM = 0 #2
         self.T_PM = 2 #2
-        self.T_CM = 3 #3
+        self.T_CM = 4 #3
         self.H_max = 40
-        self.H_I = 7
+        self.H_I = 30
         self.B_I = 0
-        self.S_I = 3
+        self.S_I = 4
         self.R = 2
         self.M = 10000000
         self.W = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-        self.D = [-1000, 0, 0, 0, 0, 0, 9, 60, 10, 3]
+        self.D = [-1000, 7, 7, 7, 7, 7, 7, 7, 7, 7]
 
     def __def_decision_vars(self):
         self.x = self.m.addVars(self.T_len, vtype=GRB.INTEGER, lb=0, name="x") #ub=?
@@ -148,7 +148,7 @@ class Model:
         # c11: 供給與訂單需求
             if t != 0:
                 self.m.addConstr(
-                    self.h[t] == self.x[t] + self.h[t-1] + self.b[t] - self.D[t] - self.b[t-1], name="c11"
+                    self.h[t] == 0.7 * self.x[t] + self.h[t-1] + self.b[t] - self.D[t] - self.b[t-1], name="c11"
                 )
         # c12: 存貨上限
             self.m.addConstr(self.h[t] <= self.H_max, name="c12")
