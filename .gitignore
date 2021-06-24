@@ -2,3 +2,4 @@
 *.sol
 ./determin/__pycache__/*
 
+./.vscode/*
