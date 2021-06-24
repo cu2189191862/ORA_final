@@ -47,12 +47,12 @@ class Model:
         self.M = 10000000
         self.m = 0.0001
         self.W_P = [0.18126924692201818, 0.3296799539643607, 0.4511883639059736, 0.5506710358827784, 0.6321205588285577, 0]
-        # self.W = np.random.uniform(low=0.0, high=1.0, size=self.T_len).tolist()
-        # self.D = np.random.normal(loc=demand_mu, scale=demand_sigma, size=(self.T_len)).tolist()
-        # self.A = np.random.triangular(good_lb, good_mid, good_ub, size=(self.T_len)).tolist()
-        self.W = [0.01] * self.T_len
-        self.D = [6] * self.T_len
-        self.A = [0.8] * self.T_len
+        self.W = np.random.uniform(low=0.0, high=1.0, size=self.T_len).tolist()
+        self.D = np.random.normal(loc=demand_mu, scale=demand_sigma, size=(self.T_len)).tolist()
+        self.A = np.random.triangular(good_lb, good_mid, good_ub, size=(self.T_len)).tolist()
+        # self.W = [0.01] * self.T_len
+        # self.D = [6] * self.T_len
+        # self.A = [0.8] * self.T_len
 
 
 
