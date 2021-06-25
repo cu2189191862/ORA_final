@@ -17,8 +17,8 @@ for r in range(replications):
 
     model = Model()
     model.optimize()
-    # model.log_params()
-    # model.log_sol()
+    model.log_params()
+    model.log_sol()
     model.dump_results(output_path=output_path)
     with open(output_path, 'a') as f:
         f.write("----------------------------\n")
